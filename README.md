@@ -8,7 +8,7 @@ The point of this is to show you how to make your own custom tests for Ingot. It
 
 This example plugin is super documented inline. Please read the three files and pay special attention to wherever you see a @TODO
 
-
+Please pay attention to the usage of `ingot_is_bot()` which is used to prevent tracking bots. We need to avoid messing up our numbers by tracking bots, but we still have to show some content so Google and such are happy and if a human gets considered to be a bot, they don't get a bad experience.
 ### Tracking A Conversion Via AJAX
 In this example conversions are tracked by reaching template_redirect with a specific post ID. You could hook that to any hook. Or you can use an AJAX call to register the conversion.
 

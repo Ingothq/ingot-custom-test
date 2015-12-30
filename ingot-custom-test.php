@@ -36,6 +36,11 @@ add_filter( 'ingot_allowed_click_types' , function( $types ){
  * //NOTE: Ingot 1.1 will handle cookie tracking for you
  */
 add_action( 'template_redirect', function(){
+	//don't intialize if is bot
+	if( ingot_is_bot() ) {
+		return;
+	}
+
 	if( is_front_page()  ) {
 		if( ! isset( $_COOKIE['my_ingot_custom_test_variant'] ) || 0 == absint( $_COOKIE['my_ingot_custom_test_variant'] )  ){
 			//get group ID
@@ -67,23 +72,24 @@ add_action( 'template_redirect', function(){
  * @return string
  */
 function my_custom_banner(){
-
+	//check if is bot
+	$is_bot = ingot_is_bot();
 	$variant = [];
 
 	//if cookie isset get variant without registering as a new test instance
-	if( isset( $_COOKIE['my_ingot_custom_test_variant'] ) && 0 < absint( $_COOKIE['my_ingot_custom_test_variant'] )  ){
+	if( ! $is_bot &&  isset( $_COOKIE['my_ingot_custom_test_variant'] ) && 0 < absint( $_COOKIE['my_ingot_custom_test_variant'] )  ){
 		$variant_id = absint( $_COOKIE['my_ingot_custom_test_variant'] );
 		$variant = \ingot\testing\crud\variant::read( $variant_id );
 
-	}elseif( isset( $my_custom_test_variant_id ) && 0 < absint( $my_custom_test_variant_id ) ){
+	}elseif(! $is_bot &&  isset( $my_custom_test_variant_id ) && 0 < absint( $my_custom_test_variant_id ) ){
 		//if is same session as cookie was set, we use the global variable to get the ID
 		$variant_id = absint( $my_custom_test_variant_id );
 		$variant = \ingot\testing\crud\variant::read( $variant_id );
 
 
 	} else {
-		//this should never be reached since, the cookie should have been set at template_redirect
-		//just in case, let's grab a random banner so we have some HTML
+		//this should never be reached unless this is a bot, the cookie should have been set at template_redirect
+		//We still need to show something since we want crawlers to index the site properly and false postives on bot checks to look right.
 		$id = my_ingot_custom_test_group();
 		if ( is_numeric( $id ) ) {
 			$group = \ingot\testing\crud\group::read( $id );
@@ -101,8 +107,7 @@ function my_custom_banner(){
 	}
 
 	//get chosen image URL and return it in an image tag
-	if ( is_array( $variant )  ) {
-
+	if ( isset( $variant[ 'content' ] ) ) {
 		$content = $variant[ 'content' ];
 
 	}else{
@@ -137,7 +142,7 @@ function my_ingot_custom_test_group(){
  * @TODO -- You should change your condition for registering a conversion. Could be a different page, a different hook. Or you could use the `/variants/<id>/conversion` endpoint to register via AJAX -- see http://ingothq.com/documentation/ingot-rest-api/
  */
 add_action( 'template_redirect', function(){
-	if( is_page( 42 ) && isset( $_COOKIE['my_ingot_custom_test_variant'] ) && 0 < absint( $_COOKIE['my_ingot_custom_test_variant'] )  ) {
+	if( ! ingot_is_bot() && is_page( 42 ) && isset( $_COOKIE['my_ingot_custom_test_variant'] ) && 0 < absint( $_COOKIE['my_ingot_custom_test_variant'] )  ) {
 		$variant_id = absint( $_COOKIE['my_ingot_custom_test_variant'] );
 		ingot_register_conversion( $variant_id  );
 	}
