@@ -20,10 +20,6 @@ add_action( 'init', 'my_ingot_custom_test_init' );
 function my_ingot_custom_test_init(){
 	if( did_action( 'ingot_loaded' ) ){
 		include_once( dirname( __FILE__ ) . '/ingot-custom-test.php' );
-
-		add_filter( 'the_content', function(){
-			my_custom_banner();
-		});
 	}
 
 }
