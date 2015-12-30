@@ -1,6 +1,9 @@
 # Sample Ingot Test Type
 <strong>This is a guide for developers -- Ingot doesn't require any PHP knowledge to use. This sample plugin is to help developers create their own integrations.</strong>
 
+Ingot is the simplest tool for A/B testing with WordPress. Learn more at [IngotHQ.com](http://ingothq.com). If you would like to discuss custom integrations for your site, or your WordPress plugin or theme, email Josh (Josh@JoshPress.net) or DM him on WordPress slack (Shelob9).
+ 
+ 
 ### What This Does
 As is, this is a plugin, that creates a custom Ingot click test that shows a a variety of images -- in this case cute cat photos. It's starts the test when a user goes to the front-page and it tracks a conversion when the reach a page with the ID of 42. It provides a function for displaying the chosen cute cat photo.
 
@@ -9,6 +12,7 @@ The point of this is to show you how to make your own custom tests for Ingot. It
 This example plugin is super documented inline. Please read the three files and pay special attention to wherever you see a @TODO
 
 Please pay attention to the usage of `ingot_is_bot()` which is used to prevent tracking bots. We need to avoid messing up our numbers by tracking bots, but we still have to show some content so Google and such are happy and if a human gets considered to be a bot, they don't get a bad experience.
+
 ### Tracking A Conversion Via AJAX
 In this example conversions are tracked by reaching template_redirect with a specific post ID. You could hook that to any hook. Or you can use an AJAX call to register the conversion.
 
@@ -65,3 +69,6 @@ jQuery( document ).ready( function ( $ ) {
 });
 </script>
 ```
+
+### Copyright & License
+Copyright 2015 Ingot LLC and license under the terms of the GNU GPL v2+ so you must to:)
